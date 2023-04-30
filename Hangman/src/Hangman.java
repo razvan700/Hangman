@@ -12,7 +12,19 @@ public class Hangman {
         while (scanner.hasNext()){
             wordsList.add(scanner.nextLine());
         }
+
         Random randomizer =new Random();
+        String word = wordsList.get(randomizer.nextInt(wordsList.size()));
+        System.out.println(word);
+        List<Character> currentGuess = new ArrayList<>();
+
+        for(int i=0;i< word.length();i++){                  //print current state for each guess
+            if(currentGuess.contains(word.charAt(i)))
+                System.out.print(word.charAt(i));
+            else {
+                System.out.print("-");
+            }
+        }
 
     }
 }
