@@ -19,25 +19,75 @@ public class Hangman {
         System.out.println(word); // displaying the word
 
         List<Character> currentGuess = new ArrayList<>();
+
         printCurrentState(word, currentGuess); // printing out initial state
+        int wrongTries = 0;
         while (true) {
+            printHangman(wrongTries);
+            if(wrongTries>=6){
+                System.out.println("You lost!");
+                break;
+            }
             getPlayerGuess(keyboardInput, word, currentGuess);
+            if(printCurrentState(word, currentGuess)){                          // winning situations
+                System.out.println("You win!");
+                break;
+            }
+            System.out.println("Please, enter a guess for the entire word:");
+            if(keyboardInput.nextLine().equals(word)){
+                System.out.println("You win!");
+                break;
+            }
+            else{
+                printCurrentState(word, currentGuess);
+                System.out.println("Wrong word!");
+                wrongTries++;
+            }
+        }
+
+    }
+    public static void printHangman(int wrongTries) {
+        System.out.println("  ----------");
+        System.out.println(" |          |");
+        if (wrongTries >= 1) {
+            System.out.println(" 0");
+        }
+        if (wrongTries >= 2) {
+            System.out.print("\\ ");
+            if (wrongTries >= 3)
+                System.out.println("/");
+            else
+                System.out.println("");
+        }
+        if (wrongTries >= 4) {
+            System.out.println(" |");
+        }
+        if (wrongTries >= 5) {
+            System.out.print("/");
+            if (wrongTries >= 6)
+                System.out.println(" \\");
+            else
+                System.out.println("");
         }
     }
-    private static void printCurrentState (String word, List < Character > currentGuess){
+
+    private static boolean printCurrentState (String word, List < Character > currentGuess){ // prints out the current state of te word
+        int count = 0;
         for (int i = 0; i < word.length(); i++) {
             if (currentGuess.contains(word.charAt(i))) {
                 System.out.print(word.charAt(i));
+                count++;
             } else {
                 System.out.print("_");
             }
         }
         System.out.println();
+        return (word.length() == count);
     }
-    public static void getPlayerGuess(Scanner keyboardInput, String word, List<Character> currentGuess) {
+    public static boolean getPlayerGuess(Scanner keyboardInput, String word, List<Character> currentGuess) {
         System.out.println("Please, enter a letter below:");
         String letterGuess = keyboardInput.nextLine();
         currentGuess.add(letterGuess.charAt(0)); // adding the first typed letter to the letter list
-        printCurrentState(word, currentGuess);
+        return word.contains(letterGuess);
     }
 }
