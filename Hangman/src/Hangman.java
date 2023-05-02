@@ -7,32 +7,39 @@ import java.util.Scanner;
 
 public class Hangman {
     public static void main(String[] args) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new File("D:\\JavaApps\\Hangman\\Words_alpha.txt"));//adding required inputs
+        Scanner scanner = new Scanner(new File("D:\\JavaApps\\Hangman\\Words_alpha.txt"));
+        //adding required inputs
         Scanner keyboardInput = new Scanner(System.in);
         List<String> wordsList = new ArrayList<>();
+        List<Character> alreadyTriedLetters = new ArrayList<>();
         while (scanner.hasNext()) {
-            wordsList.add(scanner.nextLine());// add whole file in the list
+            wordsList.add(scanner.nextLine());
+            // add whole file in the list
         }
 
         Random randomizer = new Random(); // picking the word from the list
         String word = wordsList.get(randomizer.nextInt(wordsList.size()));
-        System.out.println(word); // displaying the word
+        // displaying the word
 
         List<Character> currentGuess = new ArrayList<>();
 
-        printCurrentState(word, currentGuess); // printing out initial state
+        printCurrentState(word, currentGuess);
+        // printing out initial state
         int wrongTries = 0;
         while (true) {
             printHangman(wrongTries);
             if(wrongTries>=6){
                 System.out.println("You lost!");
+                System.out.println(word);
                 break;
             }
-            getPlayerGuess(keyboardInput, word, currentGuess);
-            if(printCurrentState(word, currentGuess)){                          // winning situations
+            getPlayerGuess(keyboardInput, word, currentGuess,alreadyTriedLetters);
+            if(printCurrentState(word, currentGuess)){
+                // winning situations
                 System.out.println("You win!");
                 break;
             }
+            System.out.println("Already tried letters:"+alreadyTriedLetters);
             System.out.println("Please, enter a guess for the entire word:");
             if(keyboardInput.nextLine().equals(word)){
                 System.out.println("You win!");
@@ -44,7 +51,6 @@ public class Hangman {
                 wrongTries++;
             }
         }
-
     }
     public static void printHangman(int wrongTries) {
         System.out.println("  ----------");
@@ -71,7 +77,8 @@ public class Hangman {
         }
     }
 
-    private static boolean printCurrentState (String word, List < Character > currentGuess){ // prints out the current state of te word
+    private static boolean printCurrentState (String word, List < Character > currentGuess){
+        // prints out the current state of te word
         int count = 0;
         for (int i = 0; i < word.length(); i++) {
             if (currentGuess.contains(word.charAt(i))) {
@@ -84,10 +91,13 @@ public class Hangman {
         System.out.println();
         return (word.length() == count);
     }
-    public static boolean getPlayerGuess(Scanner keyboardInput, String word, List<Character> currentGuess) {
+    public static boolean getPlayerGuess(Scanner keyboardInput, String word, List<Character> currentGuess, List<Character> alreadyTriedLetters) {
+        System.out.println("Already tried letters:"+alreadyTriedLetters);
         System.out.println("Please, enter a letter below:");
         String letterGuess = keyboardInput.nextLine();
-        currentGuess.add(letterGuess.charAt(0)); // adding the first typed letter to the letter list
+        currentGuess.add(letterGuess.charAt(0));
+        // adding the first typed letter to the letter list
+        alreadyTriedLetters.add(letterGuess.charAt(0));
         return word.contains(letterGuess);
     }
 }
